@@ -6,9 +6,21 @@
     <title>Document</title>
 </head>
 <body>
- <a href="/episodes"> Check out all of the episodes</a>
- <h2></h2>
- 
- <a href="/login">Login here</a>
+    
+
+<% @episodes.each do |episode| %>
+    <li> 
+      <a href="/episodes/<%=episode[0]%>"><%=episode[1]%></a> 
+    </li>
+<% end  %>
+<h2></h2>
+<a href="/">Back to homepage!</a>
+
+
+
 </body>
 </html>
+
+
+
+

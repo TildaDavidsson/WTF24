@@ -1,0 +1,20 @@
+<h2>Welcome username</h2>
+
+<% if session[:user_id] %>
+  <h2>You are logged in</h2>
+<% else %>
+  <a href="/login">Sign in here</a>
+<% end %>
+
+
+<h2>User favorite episodes</h2>
+<ul>
+<% @favorite_episodes.each do |episode_name| %>
+  <li><%= episode_name %></li>
+<% end %>
+</ul>
+
+
+
+<h2>User reviews</h2>
+<a href="/episodes">GO TO EPISODE PAGE HERE</a>
