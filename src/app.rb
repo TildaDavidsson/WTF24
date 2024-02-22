@@ -4,13 +4,14 @@ class App < Sinatra::Base
 
     def db
         if @db == nil
-            @db = SQLite3::Database.new('./db/db.sqlite')
+            @db = SQLite3::Database.new('../db/db.sqlite')
             @db.results_as_hash = true
         end
         return @db
     end
 
     get '/login' do
+        @user =  db.execute('SELECT * FROM users WHERE user_id = ?', session[:user_id]).first
         erb :login
     end
     
@@ -22,15 +23,15 @@ class App < Sinatra::Base
         user = db.execute('SELECT * FROM users WHERE username = ?', username).first
         
         if user.nil?
-          redirect "/register" # or redirect to login with an error message
+          redirect "login/register" # or redirect to login with an error message
         else
           hashed_password_from_db = user['password'] # Retrieve hashed password from the database
           
           if BCrypt::Password.new(hashed_password_from_db) == cleartext_password 
-            session[:user_id] = user['user_id'] # Set session data
-            redirect "/profile"
+             session[:user_id] = user['user_id'] # Set session data
+             redirect "/profile"
           else
-            redirect "/login"
+             redirect "/login"
           end
         end
     end
@@ -42,6 +43,8 @@ class App < Sinatra::Base
             @user = db.execute('SELECT * FROM users WHERE user_id = ?', session[:user_id]).first
             @user_favorites = db.execute('SELECT * FROM favorites WHERE user_id = ?', user_id)
             @favorite_episodes = []
+            @reviews = db.execute('SELECT * FROM reviews WHERE user_id = ?', session[:user_id])
+
 
             @user_favorites.each do |favorite|
               episode = db.execute('SELECT * FROM episodes WHERE id = ?', favorite['episode_id']).first
@@ -64,6 +67,20 @@ class App < Sinatra::Base
         #spara användare och hashed_password till databasen
         db.execute('INSERT INTO users (username, password) VALUES (?,?)', username, hashed_password)
         redirect "/login"
+    end
+
+    post '/logout' do
+        session.clear
+        redirect '/'
+    end
+
+    post '/delete_account' do 
+        user_id = session[:user_id]
+        db.execute('DELETE FROM users WHERE user_id = ?', user_id)
+        db.execute('DELETE FROM reviews WHERE user_id = ?', user_id)
+        db.execute('DELETE FROM favorites WHERE user_id = ?', user_id)
+        session.clear
+        redirect "/"
     end
 
     get '/' do

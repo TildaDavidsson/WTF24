@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link rel="stylesheet" type="text/css" href="/css/style.css"> 
+</head>
+<body>
+  <nav class="navbar">
+            <a href="/" class="logo"><img src="/img/logo.png" alt="Logo"></a>
+            <div class="nav-links">
+                <a href="/profile">Profile</a>
+                <a href="/episodes">Episodes</a>
+                <a href="/about">About</a>
+            </div>
+  </nav>
+  <div class="container">
+        <div class="episode_page">
+        <h2>Title: <%= @episode[1] %></h2>
+        <p>Description: <%= @episode[2] %></p>
+        <p>Season Number: <%= @episode[3] %></p>
+        <p>Episode Number: <%= @episode[4] %></p>
+        <h2></h2>
+        <a href="/episodes">Back to see all of the episodes</a>
+       
+       
+        <h1>Favorite episode?</h1>
+        <h2>Add this to your fav-list!</h2> 
+        
+        <% if session[:user_id] %>
+          <form action="/favorites/add" method="POST">
+            <input type="hidden" name="episode_id" value="<%= @episode[0] %>">
+            <button type="submit">Add to Favorites</button>
+          </form>
+        <% else %>
+          <p>You must sign in to do this</p>
+          <a href="/login">Login or sign up!</a>
+        <% end %>
+        
+        
+       
+       
+        <h2>Submit a Review</h2>
+        <form action='/episodes/<%= @episode[0] %>' method="POST">
+           <textarea name="review" placeholder="Write your review"></textarea>
+           <button type='submit'>Submit review</button>
+        </form>
+       
+        <h3>Reviews:</h3>
+        <div class="reviews-container">
+          <% @reviews.each do |review| %>
+            <div class="review">
+              <p class="review-text">Review: <%= review['review'] %></p>
+              <% user = db.execute('SELECT * FROM users WHERE user_id = ?', review['user_id']).first %>
+              <% if user %>
+                <p class="review-author">Written by: <%= user['username'] %></p>
+                <p class="timestamp"><%= review['time']%></p>
+              <% else %>
+                <p class="review-author">Written by: Guest</p>
+                <p class="timestamp"><%= review['time']%></p>
+              <% end %>
+            </div>
+          <% end %>
+         </div> 
+        </div>
+
+        <div class="footer">
+            <a href="/" class="back-link">Back to homepage!</a>
+        </div>
+    </div>
+
+ 
+</body>
+</html>

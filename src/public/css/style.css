@@ -1,0 +1,389 @@
+
+
+/* HOMEPAGE */
+#indexcointainer{
+    display: grid;
+    grid-template-columns: 100%;
+    grid-template-rows: 30vh 200vh 10vh;
+    grid-template-areas: 
+    'nav'
+    'mn'
+}
+
+.contentnav{
+    z-index: 10;
+    grid-area:nav;
+    display: flex;
+    justify-content: space-between;
+    flex-direction: row;
+}
+
+.navmenu{
+    padding-right: 3vw;
+}
+
+
+/*       Menu page    */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #575757;
+    margin: 0;
+    padding: 0;
+}
+
+a {
+    text-decoration: none;
+}
+
+/* Header styling */
+/* Reset default margin and padding */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Container styling */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* Header styling */
+header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+h1 {
+    font-size: 24px;
+    color: #333;
+}
+
+/* Episode list styling */
+.episode-list {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.episode-box {
+    width: calc(33.33% - 20px);
+    margin-right: 20px;
+    margin-bottom: 20px;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+.episode-content {
+    padding: 20px;
+}
+
+.episode-content img {
+    max-width: 100%;
+    height: auto;
+    margin-bottom: 10px;
+}
+
+.episode-content h3 {
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+
+.episode-content p {
+    font-size: 14px;
+    color: #666;
+}
+
+.episode-box:hover {
+    background-color: #f0f0f0;
+}
+
+/* Footer styling */
+.footer {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.back-link {
+    color: #007bff;
+    text-decoration: none;
+}
+
+.back-link:hover {
+    color: #0056b3;
+}
+
+
+
+
+/* Reset default margin and padding */
+
+
+/* Container styling */
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Header styling */
+
+
+h1 {
+    font-size: 24px;
+    color: #333;
+}
+
+/* Episode list styling */
+.episode-list ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.episode-list li {
+    margin-bottom: 10px;
+}
+
+.episode-list a {
+    text-decoration: none;
+    color: #06090c;
+    font-weight: bold;
+}
+
+.episode-list a:hover {
+    color: #06090c;
+}
+
+/* Footer styling */
+.footer {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.back-link {
+    color: #06090c;
+    text-decoration: none;
+}
+
+.back-link:hover {
+    color: #06090c;
+}
+
+.episode-content img {
+    max-width: 100%;
+    height: auto;
+    margin-bottom: 10px;
+    display: block; /* Ensure images don't have any extra space below */
+    width: 100%; /* Make images fill the entire container */
+    height: 200px; /* Set a fixed height for all images */
+    object-fit: cover; /* Maintain aspect ratio and cover the container */
+}
+
+/* Navigation bar styling */
+.navbar {
+    display: flex;
+    justify-content: space-between; /* Center the items horizontally */
+    align-items: center;
+    background-color: #333;
+    padding: 10px 20px;
+    border-radius: 0; /* Remove border-radius */
+    width: 100%; /* Stretch width to cover the entire page */
+}
+
+.nav-links a {
+    margin-left: auto;
+    color: #fff;
+    text-decoration: none;
+    margin-right: 20px;
+}
+
+.nav-links a:hover {
+    text-decoration: underline;
+}
+
+.logo img {
+    height: 100px; /* Adjust height as needed */
+}
+
+
+
+
+
+
+
+/*    REVIEWS    */
+
+.reviews-container {
+    margin-top: 20px;
+}
+  
+.review {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 400px;
+    padding: 10px;
+    margin-bottom: 10px;
+    background-color: #eeaa4c;
+}
+  
+.review-text {
+    font-size: 16px;
+    margin-bottom: 5px;
+    color: #000000;
+}
+
+.timestamp{
+    font-size: 14px;
+    margin-bottom: 3px;
+    color: #3d3636;
+}
+  
+.review-author {
+    font-size: 14px;
+    color: #000000;
+}
+
+
+/*               Login  */
+html {
+    scroll-behavior: smooth;
+}
+
+
+  
+/* Disables selector ring */
+body:not(.user-is-tabbing) button:focus,
+body:not(.user-is-tabbing) input:focus,
+body:not(.user-is-tabbing) select:focus,
+body:not(.user-is-tabbing) textarea:focus {
+    outline: none;
+}
+  
+/* ########################################################## */
+  
+.h1_login {
+    color: white;
+  
+    font-size: 35px;
+    font-weight: 800;
+}
+  
+.flex-container {
+    width: 100vw;
+  
+    margin-top: 60px;
+  
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+  
+.content-container {
+    width: 500px;
+    height: 350px;
+}
+  
+.form-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  
+    width: 500px;
+    height: 500px;
+  
+    margin-top: 5px;
+    padding-top: 20px;
+  
+    border-radius: 12px;
+  
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+  
+    background: #1f1f1f;
+    box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.199);
+}
+  
+.subtitle {
+    font-size: 11px;
+  
+    color: rgba(177, 177, 177, 0.3);
+}
+  
+input {
+    border: none;
+    border-bottom: solid rgb(143, 143, 143) 1px;
+  
+    margin-bottom: 30px;
+  
+    background: none;
+    color: rgba(255, 255, 255, 0.555);
+     
+    height: 35px;
+    width: 300px;
+}
+  
+.submit-btn {
+    cursor: pointer;
+  
+    border: none;
+    border-radius: 8px;
+  
+    background: #dd5b1a;
+    color: rgba(255, 255, 255, 0.8);
+  
+    width: 90px;
+  
+    transition: all 1s;
+}
+  
+.submit-btn:hover {
+    color: rgb(255, 255, 255);
+  
+    box-shadow: none;
+}
+
+.register-btn{
+    cursor: pointer;
+  
+    border: none;
+    border-radius: 8px;
+    
+    background: #dd5b1a;
+    color: rgba(255, 255, 255, 0.8);
+  
+    width: 90px;
+    margin-right: 16.5vw;
+    margin-top: 5vh;
+    transition: all 1s;
+}
+
+.submit-btn:hover {
+    color: rgb(255, 255, 255);
+  
+    box-shadow: none;
+}
+
+/*    Profile   */
+
+.profile_container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+
+
+/*             episode page */
+.episode_page {
+    display: flex;
+    flex-wrap: wrap;
+}

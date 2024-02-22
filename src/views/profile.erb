@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" type="text/css" href="/css/style.css"> 
+  <title>Document</title>
+</head>
+<body>
+  <nav class="navbar">
+     <a href="/" class="logo"><img src="/img/logo.png" alt="Logo"></a>
+      <div class="nav-links">
+        <a href="/profile">Profile</a>
+        <a href="/episodes">Episodes</a>
+        <a href="/about">About</a>
+      </div>
+  </nav>
+
+  <div class="container">
+   <% user = db.execute('SELECT * FROM users WHERE user_id = ?', session[:user_id]).first %>
+    <header>
+      <h1>Welcome <%= user['username'] %></h1>
+    </header>
+
+    <div class="profile-list">
+          <% if session[:user_id] %>
+            <h2>You are logged in</h2>
+            <form action="/logout" method="POST">
+              <button type="submit">Sign out</button>
+            </form>
+            <h3>Delete your account</h3>
+            <form action="/delete_account" method="POST">
+              <button type="submit" onclick="return confirm('Are you sure you want to delete your account?')">Delete</button>
+            </form>
+          <% else %>
+           <a href="/login">Sign in here</a>
+          <% end %>
+    
+    
+        <h2>User favorite episodes</h2>
+        <ul>
+          <% @favorite_episodes.each do |episode_name| %>
+            <li><%= episode_name %></li>
+         <% end %>
+       </ul>  
+    
+    
+    
+       <h2>User reviews</h2>
+       <% user_review = db.execute('SELECT * FROM reviews WHERE user_id = ?', session[:user_id]) %>
+    </div>
+     <div class="review">
+        <% @reviews.each do |user_review| %>
+              <p class="review-text"><%= user_review[2] %></p>
+              <p class="review-author">Episode: %></p>
+            <% end %>
+      </div>
+      <a href="/episodes">GO TO EPISODE PAGE HERE</a>
+      <div class="footer">
+        <a href="/" class="back-link">Back to homepage!</a>
+      </div>
+  </div>
+
+</body>
+</html>
