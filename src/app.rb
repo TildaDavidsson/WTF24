@@ -52,7 +52,7 @@ class App < Sinatra::Base
             end
             erb :profile
         else
-            redirect '/login' # Redirect to login if user is not logged in
+            redirect '/login' # SKickas hit om användare inte är inloggad
         end
     end
 
@@ -64,8 +64,27 @@ class App < Sinatra::Base
         username = params['username'] 
         cleartext_password = params['password'] 
         hashed_password = BCrypt::Password.create(cleartext_password) 
+        admin = 0
+        existing_user = db.execute('SELECT * FROM users WHERE username = ?', username).first
         #spara användare och hashed_password till databasen
-        db.execute('INSERT INTO users (username, password) VALUES (?,?)', username, hashed_password)
+        if existing_user.nil?
+            db.execute('INSERT INTO users (username, password, admin) VALUES (?,?,?)', username, hashed_password, admin)
+            redirect "/login"
+        end
+        redirect "/login"
+    end
+
+    post '/login/register_admin' do
+        username = params['username'] 
+        cleartext_password = params['password'] 
+        hashed_password = BCrypt::Password.create(cleartext_password) 
+        admin = 1
+        existing_user = db.execute('SELECT * FROM users WHERE username = ?', username).first
+        #spara användare och hashed_password till databasen
+        if existing_user.nil?
+            db.execute('INSERT INTO users (username, password, admin) VALUES (?,?,?)', username, hashed_password, admin)
+            redirect "/login"
+        end
         redirect "/login"
     end
 
@@ -83,6 +102,13 @@ class App < Sinatra::Base
         redirect "/"
     end
 
+    post '/delete_review/:id' do |id|
+        db.execute('DELETE FROM reviews WHERE review_id = ?', id)
+        current_page_url = request.referrer
+        redirect current_page_url
+    end
+
+
     get '/' do
         erb :index
     end
@@ -90,7 +116,7 @@ class App < Sinatra::Base
     get '/episodes' do
         user_id = session[:user_id]
         @episodes = db.execute('SELECT * FROM episodes;')
-        puts "@episodes: #{@episodes.inspect}" # Debugging statement
+        puts "@episodes: #{@episodes.inspect}" # Debugging 
         erb :episodes_menu
     end
 
@@ -99,14 +125,14 @@ class App < Sinatra::Base
         @episode = db.execute('SELECT * FROM episodes WHERE id=?', episode_id).first
         @reviews = db.execute('SELECT * FROM reviews WHERE episode_id=? ORDER BY time DESC', episode_id)
         @user = db.execute('SELECT * FROM users WHERE user_id=?', user_id)
-        puts "@episode: #{@episode.inspect}" # Debugging statement
+        puts "@episode: #{@episode.inspect}" # Debugging
         erb :episode_page
     end
     
     post '/episodes/:id' do |episode_id|
         review = params['review']
         user_id = session[:user_id]
-        # Insert the review into the reviews table
+        # Lägg till user + review + tid 
         current_time = Time.now.strftime('%Y-%m-%d %H:%M:%S')
         db.execute('INSERT INTO reviews (user_id, review, episode_id,time) VALUES (?, ?, ?,?)', user_id, review, episode_id, current_time)
         current_page_url = request.referrer
@@ -115,7 +141,7 @@ class App < Sinatra::Base
 
     post '/favorites/add' do
         episode_id = params['episode_id']
-        user_id = session[:user_id] # Assuming user is logged in
+        user_id = session[:user_id] 
         existing_favorite = db.execute('SELECT * FROM favorites WHERE user_id = ? AND episode_id = ?', user_id, episode_id).first
         if existing_favorite
             current_page_url = request.referrer
@@ -126,7 +152,7 @@ class App < Sinatra::Base
             redirect current_page_url
         end
     
-        # Respond with success message or appropriate JSON response
+        # Meddelande
         status 200
         body 'Episode added to favorites successfully'
         current_page_url = request.referrer

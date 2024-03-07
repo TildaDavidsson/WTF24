@@ -12,11 +12,11 @@
             <div class="nav-links">
                 <a href="/profile">Profile</a>
                 <a href="/episodes">Episodes</a>
-                <a href="/about">About</a>
+                <a href="/login">Login</a>
             </div>
   </nav>
   <div class="container">
-        <div class="episode_page">
+    <% user_admin = db.execute('SELECT admin FROM users WHERE user_id = ?', session[:user_id]).first %>
         <h2>Title: <%= @episode[1] %></h2>
         <p>Description: <%= @episode[2] %></p>
         <p>Season Number: <%= @episode[3] %></p>
@@ -40,12 +40,15 @@
         
         
        
-       
-        <h2>Submit a Review</h2>
-        <form action='/episodes/<%= @episode[0] %>' method="POST">
+        <% if user_admin.nil? || user_admin[0] == 0 %> 
+          <h2>Submit a Review</h2>
+         <form action='/episodes/<%= @episode[0] %>' method="POST">
            <textarea name="review" placeholder="Write your review"></textarea>
            <button type='submit'>Submit review</button>
-        </form>
+         </form>
+        <% elsif user_admin[0] == 1 %>
+          <h2>Admins cant submit reviews</h2>
+        <% end %>
        
         <h3>Reviews:</h3>
         <div class="reviews-container">
@@ -60,15 +63,20 @@
                 <p class="review-author">Written by: Guest</p>
                 <p class="timestamp"><%= review['time']%></p>
               <% end %>
+              <% if user_admin.nil? || user_admin[0] == 0 %>
+              <% elsif user_admin[0] == 1 %>
+                <form action='/delete_review/<%= review['review_id'] %>' method="POST">
+                  <button type='submit' class="submit-btn" onclick="return confirm('Are you sure you want to delete review?')">Delete</button>
+                </form>
+              <% end %>
             </div>
           <% end %>
-         </div> 
         </div>
 
         <div class="footer">
             <a href="/" class="back-link">Back to homepage!</a>
         </div>
-    </div>
+ </div>
 
  
 </body>

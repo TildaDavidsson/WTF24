@@ -12,23 +12,36 @@
             <div class="nav-links">
                 <a href="/profile">Profile</a>
                 <a href="/episodes">Episodes</a>
-                <a href="/about">About</a>
+                <a href="/login">Login</a>
             </div>
 </nav>
 <div class="flex-container">
 <div class="content-container">
 <div class="form-container">
-  <form action='/login/register' method="POST">
-    <h1 class="h1_login">Register</h1>
-    <br><br>
-    <span class="subtitle">USERNAME:</span><br>
-    <input type='text' name="username" placeholder="Username"><br>
-    <span class="subtitle">PASSWORD:</span><br>
-    <input type='password' name="password" placeholder="Password"><br><br>
-    <button type='submit' class="submit-btn">Create New User</button>
-  </form>
+    <% user_admin = db.execute('SELECT admin FROM users WHERE user_id = ?', session[:user_id]).first %>
+    <% if user_admin.nil? || user_admin[0] == 0 %>
+      <form action='/login/register' method="POST">
+        <h1 class="h1_login">Register</h1>
+       <br><br>
+       <span class="subtitle">USERNAME:</span><br>
+       <input type='text' name="username" placeholder="Username"><br>
+       <span class="subtitle">PASSWORD:</span><br>
+       <input type='password' name="password" placeholder="Password"><br><br>
+       <button type='submit' class="submit-btn">Create New User</button>  
+      </form> 
+    <% elsif user_admin[0] == 1 %>
+      <form action='/login/register_admin' method="POST">
+       <h1 class="h1_login">Register</h1>
+       <br><br>
+       <span class="subtitle">USERNAME:</span><br>
+       <input type='text' name="username" placeholder="Username"><br>
+       <span class="subtitle">PASSWORD:</span><br>
+       <input type='password' name="password" placeholder="Password"><br><br>
+       <button type='submit' class="submit-btn">Create New Admin</button>
+      </form>
+    <% end %>
 </div>
 </div>
 </div>
-</body>
+</body
 </html>

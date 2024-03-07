@@ -124,12 +124,17 @@ h1 {
 /* Container styling */
 .container {
     max-width: 800px;
-    margin: 0 auto;
+    margin: 0 auto; /* Center the container horizontally */
     padding: 20px;
-    background-color: #fff;
+    background-color: #ffffff; /* You can use #fff or #ffffff, both work */
     border-radius: 5px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    display: flex; /* Enable flexbox layout */
+    flex-direction: column; /* Arrange children in a column */
+    justify-content: space-between; /* Distribute space between children */
+    align-items: center; /* Center items horizontally */
 }
+
 
 /* Header styling */
 
@@ -223,7 +228,7 @@ h1 {
 }
   
 .review {
-    border: 1px solid #ccc;
+    border: 5px solid #ccc;
     border-radius: 5px;
     width: 400px;
     padding: 10px;

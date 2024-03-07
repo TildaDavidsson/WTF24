@@ -12,7 +12,7 @@
       <div class="nav-links">
         <a href="/profile">Profile</a>
         <a href="/episodes">Episodes</a>
-        <a href="/about">About</a>
+        <a href="/login">Login</a>
       </div>
   </nav>
 
@@ -49,11 +49,13 @@
        <h2>User reviews</h2>
        <% user_review = db.execute('SELECT * FROM reviews WHERE user_id = ?', session[:user_id]) %>
     </div>
-     <div class="review">
+     <div class="reviews-container">
         <% @reviews.each do |user_review| %>
-              <p class="review-text"><%= user_review[2] %></p>
-              <p class="review-author">Episode: %></p>
-            <% end %>
+          <div class="review">
+            <p class="review-text"><%= user_review[2] %></p>
+            <p class="review-author">Episode: <%= %> Season: <%= %></p>
+          </div>
+        <% end %>
       </div>
       <a href="/episodes">GO TO EPISODE PAGE HERE</a>
       <div class="footer">

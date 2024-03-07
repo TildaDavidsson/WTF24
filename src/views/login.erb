@@ -8,12 +8,12 @@
 </head>
 <body>  
 <nav class="navbar">
-            <a href="/" class="logo"><img src="/img/logo.png" alt="Logo"></a>
-            <div class="nav-links">
-                <a href="/profile">Profile</a>
-                <a href="/episodes">Episodes</a>
-                <a href="/about">About</a>
-            </div>
+  <a href="/" class="logo"><img src="/img/logo.png" alt="Logo"></a>
+  <div class="nav-links">
+    <a href="/profile">Profile</a>
+    <a href="/episodes">Episodes</a>
+    <a href="/login">Login</a>
+ </div>
 </nav>
 <div class="flex-container">
 <div class="content-container">
@@ -35,10 +35,6 @@
       <button type='submit' class="submit-btn">Login</button>
     </form>
     <button class="register-btn"><a href="/login/register">Register</a></button>
-    <% user_admin = db.execute('SELECT admin FROM users WHERE user_id = ?', session[:user_id]).first %>
-    <% if user_admin[0] == 1 %>
-      <button class="register-btn"><a href="/login/register/admin">Register admin</a></button>
-    <% end %>
   </div>
 </div>
 </div>
