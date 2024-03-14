@@ -115,9 +115,18 @@ class App < Sinatra::Base
 
     get '/episodes' do
         user_id = session[:user_id]
+        @tags = db.execute('SELECT * FROM episodes;')
         @episodes = db.execute('SELECT * FROM episodes;')
         puts "@episodes: #{@episodes.inspect}" # Debugging 
         erb :episodes_menu
+    end
+
+
+    post '/episodes/tag' do
+      tag_id = params['tag_id']
+      @correct_id = db.execute('SELECT episode_id FROM themes WHERE tag_id = ?', tag_id)
+      @episodes = db.execute('SELECT * FROM episodes WHERE id = ?', @correct_id)
+      erb :episode_page
     end
 
     get '/episodes/:id' do |episode_id|
@@ -138,6 +147,7 @@ class App < Sinatra::Base
         current_page_url = request.referrer
         redirect current_page_url
     end
+
 
     post '/favorites/add' do
         episode_id = params['episode_id']
