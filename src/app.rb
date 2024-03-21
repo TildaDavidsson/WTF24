@@ -113,21 +113,31 @@ class App < Sinatra::Base
         erb :index
     end
 
+
+
     get '/episodes' do
         user_id = session[:user_id]
-        @tags = db.execute('SELECT * FROM episodes;')
         @episodes = db.execute('SELECT * FROM episodes;')
         puts "@episodes: #{@episodes.inspect}" # Debugging 
         erb :episodes_menu
     end
 
-
     post '/episodes/tag' do
-      tag_id = params['tag_id']
-      @correct_id = db.execute('SELECT episode_id FROM themes WHERE tag_id = ?', tag_id)
-      @episodes = db.execute('SELECT * FROM episodes WHERE id = ?', @correct_id)
-      erb :episode_page
+        @tag_id = params['tag_id']
+        redirect '/episodes/category'
     end
+    
+    get '/episodes/category' do
+        user_id = session[:user_id]
+        tag = db.execute('SELECT * from sort WHERE tag_id=?', @tag_id)
+        @episodes = db.execute('SELECT *
+            FROM episodes INNER JOIN sort ON episodes.id = sort.episode_id
+            WHERE episodes.id = sort.episode_id')
+        puts "@episodes: #{@episodes.inspect}" # Debugging 
+        erb :episodes_menu
+    end
+
+      
 
     get '/episodes/:id' do |episode_id|
         user_id = session[:user_id]
@@ -139,7 +149,7 @@ class App < Sinatra::Base
     end
     
     post '/episodes/:id' do |episode_id|
-        review = params['review']
+        review = h(params['review'])
         user_id = session[:user_id]
         # Lägg till user + review + tid 
         current_time = Time.now.strftime('%Y-%m-%d %H:%M:%S')
@@ -147,6 +157,13 @@ class App < Sinatra::Base
         current_page_url = request.referrer
         redirect current_page_url
     end
+
+    helpers do
+        def h(review)
+            Rack::Utils.escape_html(review)
+        end
+    end
+
 
 
     post '/favorites/add' do
