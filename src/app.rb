@@ -113,27 +113,24 @@ class App < Sinatra::Base
         erb :index
     end
 
-
-
     get '/episodes' do
-        user_id = session[:user_id]
-        @episodes = db.execute('SELECT * FROM episodes;')
-        puts "@episodes: #{@episodes.inspect}" # Debugging 
+        @themes = db.execute('SELECT id, category FROM themes').map { |theme| { id: theme['id'], category: theme['category'] } }
+        @episodes = db.execute('SELECT * FROM episodes')
         erb :episodes_menu
     end
-
-    post '/episodes/tag' do
-        @tag_id = params['tag_id']
-        redirect '/episodes/category'
-    end
-    
-    get '/episodes/category' do
-        user_id = session[:user_id]
-        tag = db.execute('SELECT * from sort WHERE tag_id=?', @tag_id)
-        @episodes = db.execute('SELECT *
-            FROM episodes INNER JOIN sort ON episodes.id = sort.episode_id
-            WHERE episodes.id = sort.episode_id')
-        puts "@episodes: #{@episodes.inspect}" # Debugging 
+      
+    post '/episodes' do
+        @themes = db.execute('SELECT id, category FROM themes').map { |theme| { id: theme['id'], category: theme['category'] } }
+        @theme_id = params[:theme_id]
+        
+        if @theme_id && !@theme_id.empty? && @theme_id != 2 
+          @episodes = db.execute('SELECT episodes.* FROM episodes
+                                  INNER JOIN sort ON episodes.id = sort.episode_id
+                                  WHERE sort.theme_id = ?', @theme_id)
+        else
+          @episodes = db.execute('SELECT * FROM episodes')
+        end
+        
         erb :episodes_menu
     end
 

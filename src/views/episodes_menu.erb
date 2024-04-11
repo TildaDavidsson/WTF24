@@ -19,10 +19,13 @@
         <header>
             <h1>South Park Episodes</h1>
         </header>
-      
-        <form action="/episodes/tag" method="POST">
-            <input type='text' name="tag_id" placeholder="tag 0-6">
-            <button type="submit">sort by theme</button>
+        <form action="/episodes" method="post">
+            <select name="theme_id">
+                <% @themes.each do |theme| %>
+                    <option value="<%= theme[:id] %>"><%= theme[:category] %></option>
+                <% end %>
+            </select>
+            <input type="submit" class="submit-btn" value="Filter Episodes">
         </form>
 
         <div class="episode-list">
