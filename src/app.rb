@@ -46,10 +46,14 @@ class App < Sinatra::Base
             @reviews = db.execute('SELECT * FROM reviews WHERE user_id = ?', session[:user_id])
 
 
-            @user_favorites.each do |favorite|
-              episode = db.execute('SELECT * FROM episodes WHERE id = ?', favorite['episode_id']).first
-              @favorite_episodes << episode['title'] if episode
-            end
+        query = 
+            "SELECT episodes.title
+            FROM episodes
+            INNER JOIN favorites ON episodes.id = favorites.episode_id
+            WHERE favorites.user_id = ?"
+          
+        @favorite_episodes = db.execute(query, user_id).map { |row| row['title'] }
+          
             erb :profile
         else
             redirect '/login' # SKickas hit om användare inte är inloggad
@@ -75,15 +79,17 @@ class App < Sinatra::Base
     end
 
     post '/login/register_admin' do
-        username = params['username'] 
-        cleartext_password = params['password'] 
-        hashed_password = BCrypt::Password.create(cleartext_password) 
-        admin = 1
-        existing_user = db.execute('SELECT * FROM users WHERE username = ?', username).first
-        #spara användare och hashed_password till databasen
-        if existing_user.nil?
-            db.execute('INSERT INTO users (username, password, admin) VALUES (?,?,?)', username, hashed_password, admin)
-            redirect "/login"
+        user_admin = db.execute('SELECT admin FROM users WHERE user_id = ?', session[:user_id]).first
+        if user_admin[0]==1
+         username = params['username'] 
+            cleartext_password = params['password'] 
+            hashed_password = BCrypt::Password.create(cleartext_password) 
+            admin = 1
+            existing_user = db.execute('SELECT * FROM users WHERE username = ?', username).first
+            #spara användare och hashed_password till databasen
+            if existing_user.nil?
+                db.execute('INSERT INTO users (username, password, admin) VALUES (?,?,?)', username, hashed_password, admin)
+            end
         end
         redirect "/login"
     end
@@ -103,7 +109,11 @@ class App < Sinatra::Base
     end
 
     post '/delete_review/:id' do |id|
-        db.execute('DELETE FROM reviews WHERE review_id = ?', id)
+        user_admin = db.execute('SELECT admin FROM users WHERE user_id = ?', session[:user_id]).first
+        review_author =db.execute('SELECT user_id FROM reviews WHERE review_id=?', id).first
+        if user_admin[0]==1 || session[:user_id] == review_author
+            db.execute('DELETE FROM reviews WHERE review_id = ?', id)
+        end
         current_page_url = request.referrer
         redirect current_page_url
     end
@@ -146,11 +156,14 @@ class App < Sinatra::Base
     end
     
     post '/episodes/:id' do |episode_id|
-        review = h(params['review'])
-        user_id = session[:user_id]
-        # Lägg till user + review + tid 
-        current_time = Time.now.strftime('%Y-%m-%d %H:%M:%S')
-        db.execute('INSERT INTO reviews (user_id, review, episode_id,time) VALUES (?, ?, ?,?)', user_id, review, episode_id, current_time)
+        user_admin = db.execute('SELECT admin FROM users WHERE user_id = ?', session[:user_id]).first
+        if user_admin.nil? || user_admin[0] == 0 
+            review = h(params['review'])
+            user_id = session[:user_id]
+         # Lägg till user + review + tid 
+            current_time = Time.now.strftime('%Y-%m-%d %H:%M:%S')
+            db.execute('INSERT INTO reviews (user_id, review, episode_id,time) VALUES (?, ?, ?,?)', user_id, review, episode_id, current_time)
+        end
         current_page_url = request.referrer
         redirect current_page_url
     end

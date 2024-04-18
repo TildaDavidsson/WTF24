@@ -53,6 +53,7 @@
         <h3>Reviews:</h3>
         <div class="reviews-container">
           <% @reviews.each do |review| %>
+            <% review_author = db.execute('SELECT user_id FROM reviews WHERE episode_id=?', @episode[0]).first %>
             <div class="review">
               <p class="review-text">Review: <%= review['review'] %></p>
               <% user = db.execute('SELECT * FROM users WHERE user_id = ?', review['user_id']).first %>
@@ -63,11 +64,13 @@
                 <p class="review-author">Written by: Guest</p>
                 <p class="timestamp"><%= review['time']%></p>
               <% end %>
-              <% if user_admin.nil? || user_admin[0] == 0 %>
-              <% elsif user_admin[0] == 1 %>
+              
+              <% if user_admin && (user_admin[0] == 1 || review_author == session[:user_id]) %>
                 <form action='/delete_review/<%= review['review_id'] %>' method="POST">
                   <button type='submit' class="submit-btn" onclick="return confirm('Are you sure you want to delete review?')">Delete</button>
                 </form>
+              <% else %>
+                <h2>"helloworld"</h2>
               <% end %>
             </div>
           <% end %>
